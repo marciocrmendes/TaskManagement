@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.API", "src\TaskManagement.API\TaskManagement.API.csproj", "{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Infra", "src\TaskManagement.Infra\TaskManagement.Infra.csproj", "{11798D12-19DA-4A8F-8343-854F4DF49DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.Domain", "src\TaskManagement.Domain\TaskManagement.Domain.csproj", "{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{2D9720FB-BC9A-4F93-B232-7B7A48A481C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{9D78CC95-BC24-490B-B44A-194B6C92268B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infraestructure", "3 - Infraestructure", "{8EF09593-4953-42E3-A118-7DDB8E129359}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - CrossCutting", "4 - CrossCutting", "{31F0E029-4C37-4F61-8995-32EAF7E0C61A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.CrossCutting", "src\TaskManagement.CrossCutting\TaskManagement.CrossCutting.csproj", "{31B0B662-9C24-900E-4CB6-C6F6599911D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11798D12-19DA-4A8F-8343-854F4DF49DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11798D12-19DA-4A8F-8343-854F4DF49DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11798D12-19DA-4A8F-8343-854F4DF49DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11798D12-19DA-4A8F-8343-854F4DF49DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B0B662-9C24-900E-4CB6-C6F6599911D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B0B662-9C24-900E-4CB6-C6F6599911D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B0B662-9C24-900E-4CB6-C6F6599911D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B0B662-9C24-900E-4CB6-C6F6599911D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B4CDE7A2-FFA6-3E3A-1A77-776589C98A7E} = {2D9720FB-BC9A-4F93-B232-7B7A48A481C8}
+		{11798D12-19DA-4A8F-8343-854F4DF49DC9} = {8EF09593-4953-42E3-A118-7DDB8E129359}
+		{5324052A-9EB2-46F8-B2F5-CFF9F2CBA464} = {9D78CC95-BC24-490B-B44A-194B6C92268B}
+		{31B0B662-9C24-900E-4CB6-C6F6599911D6} = {31F0E029-4C37-4F61-8995-32EAF7E0C61A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FDD73420-4153-444D-AEF3-DA3EBB4FDE12}
+	EndGlobalSection
+EndGlobal
