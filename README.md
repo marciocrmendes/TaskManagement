@@ -3,6 +3,9 @@
 ## Sobre o Projeto
 O TaskManagement é um sistema de gerenciamento de tarefas e projetos construído com tecnologias modernas. Ele permite criar projetos, adicionar tarefas, acompanhar histórico de mudanças e gerar relatórios.
 
+## Observação
+O endpoint Auth foi criado apenas para brincar com as policies e identificar o usuário, sem a necessidade de criar o CRUD do usuário, conforme pedido no teste: https://meteor-ocelot-f0d.notion.site/NET-C-5281edbec2e4480d98552e5ca0242c5b 
+
 ## Tecnologias Utilizadas
 
 ### Arquitetura e Padrões de Design
