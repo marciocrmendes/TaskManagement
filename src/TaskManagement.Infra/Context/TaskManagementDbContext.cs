@@ -49,7 +49,7 @@ namespace TaskManagement.Infra.Context
                         break;
                     case EntityState.Deleted:
                         SetCurrentPropertyValue(entry, nameof(Entity.DeletedAt), utcNow);
-                        SetCurrentPropertyValue(entry, nameof(Entity.DeletedAt), userId);
+                        SetCurrentPropertyValue(entry, nameof(Entity.DeletedBy), userId);
                         break;
                 }
             }
