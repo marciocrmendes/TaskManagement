@@ -19,7 +19,7 @@ namespace TaskManagement.API.Endpoints
             {
                 var result = await sender.Send(command, cancellationToken);
                 return Results.Created("/", result);
-            });
+            }).WithDescription("AuthType: [0] - User | [1] - Manager");
 
             return endpoints;
         }
