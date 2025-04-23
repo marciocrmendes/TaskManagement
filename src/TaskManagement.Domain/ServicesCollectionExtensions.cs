@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TaskManagement.CrossCutting.Notifications;
 using TaskManagement.CrossCutting.Validation;
+using TaskManagement.Domain.Services;
 
 namespace TaskManagement.Domain
 {
@@ -18,6 +19,8 @@ namespace TaskManagement.Domain
                 .AddFluentValidation(assembly);
 
             services.AddScoped<INotificationHandler, NotificationHandler>();
+
+            services.AddSingleton<TokenProvider>();
 
             return services;
         }

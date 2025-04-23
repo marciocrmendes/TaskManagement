@@ -19,8 +19,18 @@ namespace TaskManagement.Infra.Mappers
                 .HasMaxLength(3000);
 
             builder.Property(e => e.DueDate);
+
             builder.Property(e => e.Status)
-                .HasDefaultValue(TaskStatusEnum.Pending);
+                .HasDefaultValue(TaskStatusEnum.Pending)
+                .HasConversion(
+                    v => (int)v,
+                    v => Enum.Parse<TaskStatusEnum>(v.ToString())); ;
+
+            builder.Property(e => e.Priority)
+                .HasDefaultValue(TaskPriorityEnum.Low)
+                .HasConversion(
+                    v => (int)v,
+                    v => Enum.Parse<TaskPriorityEnum>(v.ToString()));
 
             builder.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("now()");
@@ -29,9 +39,9 @@ namespace TaskManagement.Infra.Mappers
                 .WithOne(h => h.Task)
                 .HasForeignKey(h => h.TaskId);
 
-            builder.HasMany(t => t.Comments)
-                .WithOne(c => c.Task)
-                .HasForeignKey(c => c.TaskId);
+            //builder.HasMany(t => t.Comments)
+            //    .WithOne(c => c.Task)
+            //    .HasForeignKey(c => c.TaskId);
         }
     }
 }

@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Aggregates\Project\Queries\" />
-    <Folder Include="Aggregates\Task\Queries\" />
-    <Folder Include="Events\" />
+    <Folder Include="Aggregates\TaskComment\Queries\" />
   </ItemGroup>
 
 </Project>

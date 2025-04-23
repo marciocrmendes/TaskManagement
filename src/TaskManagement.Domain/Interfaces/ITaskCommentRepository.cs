@@ -1,8 +1,6 @@
-﻿using TaskManagement.Domain.Entities;
-
-namespace TaskManagement.Domain.Interfaces
+﻿namespace TaskManagement.Domain.Interfaces
 {
-    public interface ITaskCommentRepository : IRepository<TaskComment>
-    {
-    }
+    //public interface ITaskCommentRepository : IRepository<TaskComment>
+    //{
+    //}
 }

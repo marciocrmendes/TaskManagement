@@ -1,8 +1,7 @@
-﻿using Task = TaskManagement.Domain.Entities.Task;
-
-namespace TaskManagement.Domain.Interfaces
+﻿namespace TaskManagement.Domain.Interfaces
 {
-    public interface ITaskRepository : IRepository<Task>
+    public interface ITaskRepository : IRepository<Entities.Task>
     {
+        Task<Entities.Task?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

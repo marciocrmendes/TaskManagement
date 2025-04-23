@@ -15,11 +15,6 @@ namespace TaskManagement.Domain.Entities
 
         public bool IsDeleted => DeletedAt.HasValue;
 
-        public void Update()
-        {
-            UpdatedAt = DateTime.UtcNow;
-        }
-
         public IReadOnlyList<IDomainEvent> GetDomainEvents() => [.. _domainEvents];
 
         public void ClearDomainEvents()

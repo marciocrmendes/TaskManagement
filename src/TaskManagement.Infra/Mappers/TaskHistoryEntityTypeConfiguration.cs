@@ -11,10 +11,13 @@ namespace TaskManagement.Infra.Mappers
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id);
 
-            builder.Property(e => e.PropertyName).HasMaxLength(100);
-            builder.Property(e => e.OldValue).HasColumnType("jsonb");
-            builder.Property(e => e.NewValue).HasColumnType("jsonb");
+            builder.Property(e => e.Event);
+
+            builder.Property(e => e.Data)
+                .HasColumnType("jsonb");
+
             builder.Property(e => e.Date);
+
             builder.Property(e => e.ModifiedBy);
 
             builder.Property(e => e.CreatedAt)

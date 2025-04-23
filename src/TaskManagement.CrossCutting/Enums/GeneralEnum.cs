@@ -13,4 +13,10 @@
         Medium,
         High
     }
+
+    public enum  AuthTypeEnum
+    {
+        User,
+        Manager
+    }
 }

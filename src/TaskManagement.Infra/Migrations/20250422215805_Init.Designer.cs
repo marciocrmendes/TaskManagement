@@ -12,8 +12,8 @@ using TaskManagement.Infra.Context;
 namespace TaskManagement.Infra.Migrations
 {
     [DbContext(typeof(TaskManagementDbContext))]
-    [Migration("20250420185556_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250422215805_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace TaskManagement.Infra.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("character varying(3000)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -97,6 +97,11 @@ namespace TaskManagement.Infra.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Priority")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
 
@@ -123,53 +128,6 @@ namespace TaskManagement.Infra.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskManagement.Domain.Entities.TaskComment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("CommentedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("TaskComment");
-                });
-
             modelBuilder.Entity("TaskManagement.Domain.Entities.TaskHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -184,6 +142,10 @@ namespace TaskManagement.Infra.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
@@ -193,21 +155,12 @@ namespace TaskManagement.Infra.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnType("uuid");
-
-                    b.Property<object>("NewValue")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<object>("OldValue")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<string>("PropertyName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("TaskId")
                         .HasColumnType("uuid");
@@ -247,7 +200,7 @@ namespace TaskManagement.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -280,17 +233,6 @@ namespace TaskManagement.Infra.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("TaskManagement.Domain.Entities.TaskComment", b =>
-                {
-                    b.HasOne("TaskManagement.Domain.Entities.Task", "Task")
-                        .WithMany("Comments")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("TaskManagement.Domain.Entities.TaskHistory", b =>
                 {
                     b.HasOne("TaskManagement.Domain.Entities.Task", "Task")
@@ -309,8 +251,6 @@ namespace TaskManagement.Infra.Migrations
 
             modelBuilder.Entity("TaskManagement.Domain.Entities.Task", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("HistoryList");
                 });
 

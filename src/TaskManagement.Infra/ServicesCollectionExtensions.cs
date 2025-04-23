@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskManagement.Domain.Interfaces;
 using TaskManagement.Infra.Context;
+using TaskManagement.Infra.Context.Interceptors;
 using TaskManagement.Infra.Repositories;
 
 namespace TaskManagement.Infra
@@ -24,8 +26,11 @@ namespace TaskManagement.Infra
             var connectionString = configuration.GetConnectionString("Postgres")
                             ?? throw new ArgumentException("Connection string not found");
 
-            services.AddDbContext<TaskManagementDbContext>(options =>
-                options.UseNpgsql(connectionString));
+            services.AddSingleton<PublishDomainEventsInterceptor>();
+
+            services.AddDbContext<TaskManagementDbContext>((serviceProvider, options) => options
+                .UseNpgsql(connectionString)
+                .AddInterceptors(GetInterceptors(serviceProvider)));
 
             return services;
         }
@@ -34,10 +39,15 @@ namespace TaskManagement.Infra
         {
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<ITaskCommentRepository, TaskCommentRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITaskHistoryRepository, TaskHistoryRepository>();
 
             return services;
         }
+
+        private static IInterceptor[] GetInterceptors(IServiceProvider serviceProvider) => 
+        [
+            serviceProvider.GetRequiredService<PublishDomainEventsInterceptor>()
+        ];
     }
 }

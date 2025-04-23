@@ -8,5 +8,6 @@ namespace TaskManagement.Domain.Aggregates.Task.Commands
         string Title,
         string Description,
         DateTime? DueDate,
+        TaskStatusEnum Status,
         TaskPriorityEnum Priority) : IRequest<CreateTaskResponse>;
 }

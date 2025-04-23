@@ -11,39 +11,40 @@ namespace TaskManagement.Infra.Repositories
     public abstract class Repository<TEntity>(TaskManagementDbContext dbContext) : 
         IRepository<TEntity> where TEntity : Entity
     {
+        public DbSet<TEntity> Table => dbContext.Set<TEntity>();
         public IUnitOfWork UnitOfWork => dbContext;
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            await dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
+            await Table.AddAsync(entity, cancellationToken);
             return entity;
         }
 
         public virtual async Task AddRangeAsync(ICollection<TEntity> entities, CancellationToken cancellationToken = default)
         {
-            await dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken);
+            await Table.AddRangeAsync(entities, cancellationToken);
         }
 
         public virtual async Task UpdateAsync(TEntity entity)
         {
-            dbContext.Set<TEntity>().Update(entity);
+            Table.Update(entity);
             await Task.CompletedTask;
         }
 
         public virtual async Task DeleteAsync(TEntity entity)
         {
-            dbContext.Set<TEntity>().Remove(entity);
+            Table.Remove(entity);
             await Task.CompletedTask;
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity?> FindAsync<TId>(TId id, CancellationToken cancellationToken = default)
         {
-            return await dbContext.Set<TEntity>().FindAsync([id], cancellationToken);
+            return await Table.FindAsync([id], cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await dbContext.Set<TEntity>()
+            return await Table
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
@@ -51,15 +52,15 @@ namespace TaskManagement.Infra.Repositories
         public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate,
             CancellationToken cancellationToken = default)
         {
-            return await dbContext.Set<TEntity>()
+            return await Table
                 .AsNoTracking()
                 .AnyAsync(predicate, cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate,
+        public virtual async Task<IReadOnlyCollection<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate,
             CancellationToken cancellationToken = default)
         {
-            return await dbContext.Set<TEntity>()
+            return await Table
                 .AsNoTracking()
                 .Where(predicate)
                 .ToListAsync(cancellationToken);

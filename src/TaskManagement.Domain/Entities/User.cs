@@ -4,17 +4,15 @@
     {
         private User() { }
 
-        public required string Name { get; set; }
-        public required string Email { get; set; }
-
-        public virtual ICollection<Project> Projects { get; set; } = [];
-
-        public User Create(string name, string email, ICollection<Project> projects)
+        public User(string name, string email)
         {
             Name = name;
             Email = email;
-            Projects = projects;
-            return this;
         }
+
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+
+        public virtual ICollection<Project> Projects { get; set; } = [];
     }
 }
