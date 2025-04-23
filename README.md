@@ -49,7 +49,7 @@ O TaskManagement é um sistema de gerenciamento de tarefas e projetos construíd
 - Docker e Docker Compose
 - PostgreSQL (se executar fora do Docker)
 
-### Usando Docker
+### Usando Docker (localhost:8080)
 ```bash
 docker-compose up -d
 ```
