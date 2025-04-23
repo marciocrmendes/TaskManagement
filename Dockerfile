@@ -3,6 +3,8 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+ENV ASPNETCORE_ENVIRONMENT=Development
+
 # Use the official .NET SDK image for the build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -11,7 +13,7 @@ WORKDIR /src
 # Copy project files and restore dependencies
 COPY ["src/TaskManagement.API/TaskManagement.API.csproj", "src/TaskManagement.API/"]
 COPY ["src/TaskManagement.Domain/TaskManagement.Domain.csproj", "src/TaskManagement.Domain/"]
-COPY ["src/TaskManagement.Kernel/TaskManagement.Kernel.csproj", "src/TaskManagement.Kernel/"]
+COPY ["src/TaskManagement.CrossCutting/TaskManagement.CrossCutting.csproj", "src/TaskManagement.CrossCutting/"]
 COPY ["src/TaskManagement.Infra/TaskManagement.Infra.csproj", "src/TaskManagement.Infra/"]
 RUN dotnet restore "src/TaskManagement.API/TaskManagement.API.csproj"
 
