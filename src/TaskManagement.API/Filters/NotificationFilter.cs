@@ -1,17 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagement.CrossCutting.Notifications;
 
 namespace TaskManagement.API.Filters
 {
-    public sealed class NotificationFilter(INotificationHandler notificationContext) : IEndpointFilter
+    public sealed class NotificationFilter(INotificationHandler notificationContext)
+        : IEndpointFilter
     {
-        public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context,
-            EndpointFilterDelegate next)
+        public async ValueTask<object?> InvokeAsync(
+            EndpointFilterInvocationContext context,
+            EndpointFilterDelegate next
+        )
         {
             var result = await next(context);
 
-            if (!notificationContext.HasNotifications) return result;
+            if (!notificationContext.HasNotifications)
+                return result;
 
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.HttpContext.Response.ContentType = "application/json";
@@ -22,10 +26,7 @@ namespace TaskManagement.API.Filters
                 Title = "Erro na validação dos dados",
                 Detail = "Um ou mais erros foram encontrados",
                 Status = (int)HttpStatusCode.BadRequest,
-                Extensions =
-                {
-                    ["errors"] = notificationContext.Notifications
-                }
+                Extensions = { ["errors"] = notificationContext.Notifications },
             };
 
             return Results.Problem(problemDetails);

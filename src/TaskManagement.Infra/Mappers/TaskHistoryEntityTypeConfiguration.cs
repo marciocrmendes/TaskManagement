@@ -13,15 +13,13 @@ namespace TaskManagement.Infra.Mappers
 
             builder.Property(e => e.Event);
 
-            builder.Property(e => e.Data)
-                .HasColumnType("jsonb");
+            builder.Property(e => e.Data).HasColumnType("jsonb");
 
             builder.Property(e => e.Date);
 
             builder.Property(e => e.ModifiedBy);
 
-            builder.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()");
+            builder.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
         }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace TaskManagement.CrossCutting.Dtos.Task
 {
-    public sealed record TaskResponse(Guid Id, 
-        Guid ProjectId, 
-        string Title, 
-        string? Description, 
+    public sealed record TaskResponse(
+        Guid Id,
+        Guid ProjectId,
+        string Title,
+        string? Description,
         DateTime? DueDate,
         TaskStatusEnum Status,
-        TaskPriorityEnum Priority);
+        TaskPriorityEnum Priority
+    );
 }

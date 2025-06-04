@@ -25,11 +25,20 @@ namespace TaskManagement.Domain.Entities
 
         public static class Errors
         {
-            public static readonly Notification NotFound = new("ProjectNotFound", "Projeto não encontrado");
-            public static readonly Notification HasPendingTask = new("ProjectHasPendingTask", """                
+            public static readonly Notification NotFound = new(
+                "ProjectNotFound",
+                "Projeto não encontrado"
+            );
+            public static readonly Notification HasPendingTask = new(
+                "ProjectHasPendingTask",
+                """                
                 Não é possível excluir o projeto, pois existem tarefas pendentes. Conclua ou remova as tarefas pendentes                
-                """);
-            public static readonly Notification TaskLenghtLimit = new("TaskLenghtLimit", "O projeto não pode ter mais de 20 tarefas.");
+                """
+            );
+            public static readonly Notification TaskLenghtLimit = new(
+                "TaskLenghtLimit",
+                "O projeto não pode ter mais de 20 tarefas."
+            );
         }
     }
 }

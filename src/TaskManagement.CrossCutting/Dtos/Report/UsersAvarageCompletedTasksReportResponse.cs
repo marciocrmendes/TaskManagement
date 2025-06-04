@@ -1,5 +1,4 @@
-﻿
-namespace TaskManagement.CrossCutting.Dtos.Report
+﻿namespace TaskManagement.CrossCutting.Dtos.Report
 {
     public class UsersAvarageCompletedTasksReportResponse
     {

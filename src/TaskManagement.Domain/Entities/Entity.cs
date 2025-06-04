@@ -28,7 +28,8 @@ namespace TaskManagement.Domain.Entities
         }
     }
 
-    public abstract class Entity<TId> : Entity where TId : struct
+    public abstract class Entity<TId> : Entity
+        where TId : struct
     {
         public TId Id { get; set; }
     }

@@ -6,20 +6,25 @@ using TaskManagement.Domain.Aggregates.Task.Events;
 
 namespace TaskManagement.Domain.Entities
 {
-    public class Task(Guid projectId,
+    public class Task(
+        Guid projectId,
         string title,
         string? description,
         DateTime? dueDate,
         TaskStatusEnum status,
-        TaskPriorityEnum priority) : Entity<Guid>
+        TaskPriorityEnum priority
+    ) : Entity<Guid>
     {
-        public Task(Guid id,
+        public Task(
+            Guid id,
             Guid projectId,
             string title,
             string? description,
             DateTime? dueDate,
             TaskStatusEnum status,
-            TaskPriorityEnum priority) : this(projectId, title, description, dueDate, status, priority)
+            TaskPriorityEnum priority
+        )
+            : this(projectId, title, description, dueDate, status, priority)
         {
             Id = id;
             Status = status;
@@ -34,19 +39,18 @@ namespace TaskManagement.Domain.Entities
 
         public virtual Project Project { get; private set; } = null!;
         public virtual ICollection<TaskHistory> HistoryList { get; private set; } = [];
+
         //public virtual ICollection<TaskComment> Comments { get; private set; } = [];
 
         public Task ChangeTitle(string title)
         {
-            if(Title != title)
+            if (Title != title)
             {
-                var data = new ChangeTaskHistoryDto(nameof(Title),
-                    Title,
-                    title);
+                var data = new ChangeTaskHistoryDto(nameof(Title), Title, title);
 
-                RaiseDomainEvent(new AddTaskChangeDomainEvent(
-                    TaskId: Id,
-                    Data: JsonSerializer.Serialize(data)));
+                RaiseDomainEvent(
+                    new AddTaskChangeDomainEvent(TaskId: Id, Data: JsonSerializer.Serialize(data))
+                );
             }
 
             Title = title;
@@ -58,30 +62,30 @@ namespace TaskManagement.Domain.Entities
         {
             if (Description != description)
             {
-                var data = new ChangeTaskHistoryDto(nameof(Description),
-                    Description,
-                    description);
+                var data = new ChangeTaskHistoryDto(nameof(Description), Description, description);
 
-                RaiseDomainEvent(new AddTaskChangeDomainEvent(
-                    TaskId: Id,
-                    Data: JsonSerializer.Serialize(data)));
+                RaiseDomainEvent(
+                    new AddTaskChangeDomainEvent(TaskId: Id, Data: JsonSerializer.Serialize(data))
+                );
             }
 
             Description = description;
             return this;
         }
-                    
+
         public Task ChangeDueDate(DateTime? dueDate)
         {
             if (DueDate != dueDate)
             {
-                var data = new ChangeTaskHistoryDto(nameof(DueDate),
+                var data = new ChangeTaskHistoryDto(
+                    nameof(DueDate),
                     DueDate?.ToShortDateString(),
-                    dueDate?.ToShortDateString());
+                    dueDate?.ToShortDateString()
+                );
 
-                RaiseDomainEvent(new AddTaskChangeDomainEvent(
-                    TaskId: Id,
-                    Data: JsonSerializer.Serialize(data)));
+                RaiseDomainEvent(
+                    new AddTaskChangeDomainEvent(TaskId: Id, Data: JsonSerializer.Serialize(data))
+                );
             }
             DueDate = dueDate;
             return this;
@@ -91,13 +95,15 @@ namespace TaskManagement.Domain.Entities
         {
             if (Status != status)
             {
-                var data = new ChangeTaskHistoryDto(nameof(Status),
+                var data = new ChangeTaskHistoryDto(
+                    nameof(Status),
                     Status.ToString(),
-                    status.ToString());
+                    status.ToString()
+                );
 
-                RaiseDomainEvent(new AddTaskChangeDomainEvent(
-                    TaskId: Id,
-                    Data: JsonSerializer.Serialize(data)));
+                RaiseDomainEvent(
+                    new AddTaskChangeDomainEvent(TaskId: Id, Data: JsonSerializer.Serialize(data))
+                );
             }
             Status = status;
             return this;
@@ -105,7 +111,10 @@ namespace TaskManagement.Domain.Entities
 
         public static class Errors
         {
-            public static readonly Notification NotFound = new("TaskNotFound", "Tarefa não encontrada");
+            public static readonly Notification NotFound = new(
+                "TaskNotFound",
+                "Tarefa não encontrada"
+            );
         }
     }
 }

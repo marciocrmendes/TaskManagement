@@ -1,6 +1,6 @@
 using Moq;
-using TaskManagement.Domain.Aggregates.Project.Handlers;
-using TaskManagement.Domain.Aggregates.Project.Queries;
+using TaskManagement.Application.Features.Projects.Handlers;
+using TaskManagement.Application.Features.Projects.Queries;
 using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.UnitTests.Domain.Aggregates.Project.Handlers;
@@ -24,7 +24,7 @@ public class GetAllProjectsQueryHandlerTests
         {
             CreateProject("Project 1", "Description 1"),
             CreateProject("Project 2", "Description 2"),
-            CreateProject("Project 3", "Description 3")
+            CreateProject("Project 3", "Description 3"),
         };
 
         _projectRepositoryMock
@@ -64,10 +64,12 @@ public class GetAllProjectsQueryHandlerTests
     private TaskManagement.Domain.Entities.Project CreateProject(string name, string description)
     {
         var project = new TaskManagement.Domain.Entities.Project(name, description);
-        
+
         // Definir um ID para o projeto usando reflection (já que o setter é privado)
-        typeof(TaskManagement.Domain.Entities.Project).GetProperty("Id")?.SetValue(project, Guid.NewGuid());
-        
+        typeof(TaskManagement.Domain.Entities.Project)
+            .GetProperty("Id")
+            ?.SetValue(project, Guid.NewGuid());
+
         return project;
     }
 }

@@ -1,10 +1,10 @@
+using System.Linq.Expressions;
 using MediatR;
 using Moq;
-using System.Linq.Expressions;
+using TaskManagement.Application.Features.Projects.Commands;
+using TaskManagement.Application.Features.Projects.Handlers;
 using TaskManagement.CrossCutting.Notifications;
 using TaskManagement.CrossCutting.Persistences;
-using TaskManagement.Domain.Aggregates.Project.Commands;
-using TaskManagement.Domain.Aggregates.Project.Handlers;
 using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.UnitTests.Domain.Aggregates.Project.Handlers;
@@ -25,11 +25,12 @@ public class DeleteProjectHandlerTests
         _notificationHandlerMock = new Mock<INotificationHandler>();
 
         _projectRepositoryMock.Setup(repo => repo.UnitOfWork).Returns(_unitOfWorkMock.Object);
-        
+
         _handler = new DeleteProjectHandler(
             _projectRepositoryMock.Object,
             _taskRepositoryMock.Object,
-            _notificationHandlerMock.Object);
+            _notificationHandlerMock.Object
+        );
     }
 
     [Fact]
@@ -39,15 +40,25 @@ public class DeleteProjectHandlerTests
         var projectId = Guid.NewGuid();
         var command = new DeleteProjectCommand(projectId);
 
-        var existingProject = new TaskManagement.Domain.Entities.Project("Test Project", "Test Description");
-        typeof(TaskManagement.Domain.Entities.Project).GetProperty("Id")?.SetValue(existingProject, projectId);
+        var existingProject = new TaskManagement.Domain.Entities.Project(
+            "Test Project",
+            "Test Description"
+        );
+        typeof(TaskManagement.Domain.Entities.Project)
+            .GetProperty("Id")
+            ?.SetValue(existingProject, projectId);
 
         _projectRepositoryMock
             .Setup(repo => repo.FindAsync(projectId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingProject);
 
         _taskRepositoryMock
-            .Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(), It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.ExistsAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(false); // Não tem tarefas pendentes
 
         _unitOfWorkMock
@@ -68,7 +79,7 @@ public class DeleteProjectHandlerTests
     {
         // Arrange
         var projectId = Guid.NewGuid();
-        var command = new DeleteProjectCommand (projectId);
+        var command = new DeleteProjectCommand(projectId);
 
         _projectRepositoryMock
             .Setup(repo => repo.FindAsync(projectId, It.IsAny<CancellationToken>()))
@@ -79,9 +90,14 @@ public class DeleteProjectHandlerTests
 
         // Assert
         Assert.Equal(default, result);
-        _notificationHandlerMock.Verify(handler => 
-            handler.AddNotification(It.IsAny<Notification>()), Times.Once);
-        _projectRepositoryMock.Verify(repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Project>()), Times.Never);
+        _notificationHandlerMock.Verify(
+            handler => handler.AddNotification(It.IsAny<Notification>()),
+            Times.Once
+        );
+        _projectRepositoryMock.Verify(
+            repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Project>()),
+            Times.Never
+        );
         _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -90,17 +106,27 @@ public class DeleteProjectHandlerTests
     {
         // Arrange
         var projectId = Guid.NewGuid();
-        var command = new DeleteProjectCommand (projectId);
+        var command = new DeleteProjectCommand(projectId);
 
-        var existingProject = new TaskManagement.Domain.Entities.Project("Test Project", "Test Description");
-        typeof(TaskManagement.Domain.Entities.Project).GetProperty("Id")?.SetValue(existingProject, projectId);
+        var existingProject = new TaskManagement.Domain.Entities.Project(
+            "Test Project",
+            "Test Description"
+        );
+        typeof(TaskManagement.Domain.Entities.Project)
+            .GetProperty("Id")
+            ?.SetValue(existingProject, projectId);
 
         _projectRepositoryMock
             .Setup(repo => repo.FindAsync(projectId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingProject);
 
         _taskRepositoryMock
-            .Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(), It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.ExistsAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(true); // Tem tarefas pendentes
 
         // Act
@@ -108,9 +134,14 @@ public class DeleteProjectHandlerTests
 
         // Assert
         Assert.Equal(default, result);
-        _notificationHandlerMock.Verify(handler => 
-            handler.AddNotification(It.IsAny<Notification>()), Times.Once);
-        _projectRepositoryMock.Verify(repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Project>()), Times.Never);
+        _notificationHandlerMock.Verify(
+            handler => handler.AddNotification(It.IsAny<Notification>()),
+            Times.Once
+        );
+        _projectRepositoryMock.Verify(
+            repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Project>()),
+            Times.Never
+        );
         _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }

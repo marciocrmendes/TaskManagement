@@ -1,8 +1,8 @@
-using Moq;
 using System.Linq.Expressions;
+using Moq;
+using TaskManagement.Application.Features.Projects.Handlers;
+using TaskManagement.Application.Features.Projects.Queries;
 using TaskManagement.CrossCutting.Enums;
-using TaskManagement.Domain.Aggregates.Project.Handlers;
-using TaskManagement.Domain.Aggregates.Project.Queries;
 using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.UnitTests.Domain.Aggregates.Project.Handlers;
@@ -27,13 +27,16 @@ public class GetTasksByIdQueryHandlerTests
         {
             CreateTask(projectId, "Task 1", "Description 1", TaskStatusEnum.Pending),
             CreateTask(projectId, "Task 2", "Description 2", TaskStatusEnum.InProgress),
-            CreateTask(projectId, "Task 3", "Description 3", TaskStatusEnum.Completed)
+            CreateTask(projectId, "Task 3", "Description 3", TaskStatusEnum.Completed),
         };
 
         _taskRepositoryMock
-            .Setup(repo => repo.WhereAsync(
-                It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
-                It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.WhereAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(tasks);
 
         var query = new GetTasksByIdQuery(projectId);
@@ -54,9 +57,12 @@ public class GetTasksByIdQueryHandlerTests
         var tasks = new List<TaskManagement.Domain.Entities.Task>();
 
         _taskRepositoryMock
-            .Setup(repo => repo.WhereAsync(
-                It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
-                It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.WhereAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(tasks);
 
         var query = new GetTasksByIdQuery(projectId);
@@ -69,7 +75,12 @@ public class GetTasksByIdQueryHandlerTests
         Assert.Empty(result.Items);
     }
 
-    private TaskManagement.Domain.Entities.Task CreateTask(Guid projectId, string title, string description, TaskStatusEnum status)
+    private TaskManagement.Domain.Entities.Task CreateTask(
+        Guid projectId,
+        string title,
+        string description,
+        TaskStatusEnum status
+    )
     {
         var task = new TaskManagement.Domain.Entities.Task(
             projectId,
@@ -77,11 +88,14 @@ public class GetTasksByIdQueryHandlerTests
             description,
             DateTime.UtcNow.AddDays(7),
             status,
-            TaskPriorityEnum.Medium);
-        
+            TaskPriorityEnum.Medium
+        );
+
         // Definir um ID para a tarefa usando reflection (já que o setter é privado)
-        typeof(TaskManagement.Domain.Entities.Task).GetProperty("Id")?.SetValue(task, Guid.NewGuid());
-        
+        typeof(TaskManagement.Domain.Entities.Task)
+            .GetProperty("Id")
+            ?.SetValue(task, Guid.NewGuid());
+
         return task;
     }
 }

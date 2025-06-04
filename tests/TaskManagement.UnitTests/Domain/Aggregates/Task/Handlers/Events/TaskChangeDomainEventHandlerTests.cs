@@ -1,6 +1,6 @@
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System.Text.Json;
 using TaskManagement.CrossCutting.Persistences;
 using TaskManagement.Domain.Aggregates.Task.Events;
 using TaskManagement.Domain.Aggregates.Task.Handlers.Events;
@@ -54,10 +54,7 @@ public class TaskChangeDomainEventHandlerTests
         // Arrange
         var taskId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var eventData = new { 
-            OldValue = "Original Value", 
-            NewValue = "Updated Value" 
-        };
+        var eventData = new { OldValue = "Original Value", NewValue = "Updated Value" };
         var serializedData = JsonSerializer.Serialize(eventData);
 
         var notification = new AddTaskChangeDomainEvent(taskId, serializedData);
@@ -66,7 +63,8 @@ public class TaskChangeDomainEventHandlerTests
             taskId,
             nameof(AddTaskChangeDomainEvent),
             JsonSerializer.Serialize(notification),
-            userId);
+            userId
+        );
 
         _taskHistoryRepositoryMock
             .Setup(repo => repo.AddAsync(It.IsAny<TaskHistory>(), It.IsAny<CancellationToken>()))
@@ -81,16 +79,18 @@ public class TaskChangeDomainEventHandlerTests
 
         // Assert
         _taskHistoryRepositoryMock.Verify(
-            repo => repo.AddAsync(
-                It.Is<TaskHistory>(h => 
-                    h.TaskId == taskId && 
-                    h.Event == nameof(AddTaskChangeDomainEvent) && 
-                    h.Data == serializedData),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-        
-        _unitOfWorkMock.Verify(
-            uow => uow.CommitAsync(It.IsAny<CancellationToken>()),
-            Times.Once);
+            repo =>
+                repo.AddAsync(
+                    It.Is<TaskHistory>(h =>
+                        h.TaskId == taskId
+                        && h.Event == nameof(AddTaskChangeDomainEvent)
+                        && h.Data == serializedData
+                    ),
+                    It.IsAny<CancellationToken>()
+                ),
+            Times.Once
+        );
+
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

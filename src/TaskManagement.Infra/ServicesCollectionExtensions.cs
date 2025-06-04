@@ -11,26 +11,33 @@ namespace TaskManagement.Infra
 {
     public static class ServicesCollectionExtensions
     {
-        public static IServiceCollection AddInfraDependencies(this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddInfraDependencies(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
-            services
-                .AddDatabase(configuration)
-                .AddRepositories();
+            services.AddDatabase(configuration).AddRepositories();
 
             return services;
         }
 
-        private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddDatabase(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
-            var connectionString = configuration.GetConnectionString("Postgres")
-                            ?? throw new ArgumentException("Connection string not found");
+            var connectionString =
+                configuration.GetConnectionString("Postgres")
+                ?? throw new ArgumentException("Connection string not found");
 
             services.AddSingleton<PublishDomainEventsInterceptor>();
 
-            services.AddDbContext<TaskManagementDbContext>((serviceProvider, options) => options
-                .UseNpgsql(connectionString)
-                .AddInterceptors(GetInterceptors(serviceProvider)));
+            services.AddDbContext<TaskManagementDbContext>(
+                (serviceProvider, options) =>
+                    options
+                        .UseNpgsql(connectionString)
+                        .AddInterceptors(GetInterceptors(serviceProvider))
+            );
 
             return services;
         }
@@ -45,9 +52,7 @@ namespace TaskManagement.Infra
             return services;
         }
 
-        private static IInterceptor[] GetInterceptors(IServiceProvider serviceProvider) => 
-        [
-            serviceProvider.GetRequiredService<PublishDomainEventsInterceptor>()
-        ];
+        private static IInterceptor[] GetInterceptors(IServiceProvider serviceProvider) =>
+            [serviceProvider.GetRequiredService<PublishDomainEventsInterceptor>()];
     }
 }

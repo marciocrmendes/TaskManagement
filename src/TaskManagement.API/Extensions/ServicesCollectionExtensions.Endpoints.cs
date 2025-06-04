@@ -7,7 +7,8 @@ public static class ServicesCollectionExtensionsEndpoints
 {
     public static IEndpointRouteBuilder RegisterEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        return endpoints.MapGroup("/api/v1")
+        return endpoints
+            .MapGroup("/api/v1")
             .RequireAuthorization()
             .AddEndpointFilter<NotificationFilter>()
             .RegisterAuthEndpoints()
