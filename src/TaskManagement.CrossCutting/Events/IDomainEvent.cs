@@ -2,7 +2,5 @@
 
 namespace TaskManagement.CrossCutting.Events
 {
-    public interface IDomainEvent : INotification
-    {
-    }
+    public interface IDomainEvent : INotification { }
 }

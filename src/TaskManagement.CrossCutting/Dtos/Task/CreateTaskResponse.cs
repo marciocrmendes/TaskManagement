@@ -2,10 +2,12 @@
 
 namespace TaskManagement.CrossCutting.Dtos.Task
 {
-    public record CreateTaskResponse(Guid Id,
+    public record CreateTaskResponse(
+        Guid Id,
         Guid ProjectId,
         string Title,
         DateTime? DueDate,
         string? Description,
-        TaskPriorityEnum Priority);
+        TaskPriorityEnum Priority
+    );
 }

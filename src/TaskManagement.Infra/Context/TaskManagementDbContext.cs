@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Security.Claims;
 using TaskManagement.CrossCutting.Persistences;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Infra.Mappers;
@@ -9,8 +9,10 @@ using Task = TaskManagement.Domain.Entities.Task;
 
 namespace TaskManagement.Infra.Context
 {
-    public sealed class TaskManagementDbContext(DbContextOptions<TaskManagementDbContext> options, 
-        IHttpContextAccessor contextAccessor) : DbContext(options), IUnitOfWork
+    public sealed class TaskManagementDbContext(
+        DbContextOptions<TaskManagementDbContext> options,
+        IHttpContextAccessor contextAccessor
+    ) : DbContext(options), IUnitOfWork
     {
         public DbSet<Task> Tasks { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -59,7 +61,8 @@ namespace TaskManagement.Infra.Context
 
         private Guid GetUserId()
         {
-            var userIdValue = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            var userIdValue =
+                contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? Guid.Empty.ToString();
             return Guid.TryParse(userIdValue, out var userId) ? userId : Guid.Empty;
         }
@@ -67,6 +70,7 @@ namespace TaskManagement.Infra.Context
         private static void SetCurrentPropertyValue(
             EntityEntry entry,
             string propertyName,
-            object? value) => entry.Property(propertyName).CurrentValue = value;
+            object? value
+        ) => entry.Property(propertyName).CurrentValue = value;
     }
 }

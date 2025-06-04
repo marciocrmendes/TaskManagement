@@ -4,19 +4,19 @@
     {
         Pending,
         InProgress,
-        Completed
+        Completed,
     }
 
     public enum TaskPriorityEnum
     {
         Low,
         Medium,
-        High
+        High,
     }
 
-    public enum  AuthTypeEnum
+    public enum AuthTypeEnum
     {
         User,
-        Manager
+        Manager,
     }
 }

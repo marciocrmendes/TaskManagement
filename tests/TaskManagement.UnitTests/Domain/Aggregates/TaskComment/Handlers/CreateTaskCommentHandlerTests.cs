@@ -1,12 +1,12 @@
-using MediatR;
-using Moq;
 using System.Linq.Expressions;
 using System.Text.Json;
+using MediatR;
+using Moq;
+using TaskManagement.Application.Features.TaskComments.Commands;
+using TaskManagement.Application.Features.TaskComments.Handlers;
 using TaskManagement.CrossCutting.Notifications;
 using TaskManagement.CrossCutting.Persistences;
-using TaskManagement.Domain.Aggregates.TaskComment.Commands;
 using TaskManagement.Domain.Aggregates.TaskComment.Events;
-using TaskManagement.Domain.Aggregates.TaskComment.Handlers;
 using TaskManagement.Domain.Entities;
 using TaskManagement.Domain.Interfaces;
 
@@ -28,11 +28,12 @@ public class CreateTaskCommentHandlerTests
         _notificationHandlerMock = new Mock<INotificationHandler>();
 
         _taskHistoryRepositoryMock.Setup(repo => repo.UnitOfWork).Returns(_unitOfWorkMock.Object);
-        
+
         _handler = new CreateTaskCommentHandler(
             _taskHistoryRepositoryMock.Object,
             _taskRepositoryMock.Object,
-            _notificationHandlerMock.Object);
+            _notificationHandlerMock.Object
+        );
     }
 
     [Fact]
@@ -42,20 +43,22 @@ public class CreateTaskCommentHandlerTests
         var taskId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var comment = "This is a test comment";
-        var command = new CreateTaskCommentCommand
-        {
-            TaskId = taskId,
-            Comment = comment
-        };
+        var command = new CreateTaskCommentCommand { TaskId = taskId, Comment = comment };
 
         var taskHistory = new TaskHistory(
             taskId,
             nameof(AddTaskCommentDomainEvent),
             JsonSerializer.Serialize(new AddTaskCommentDomainEvent(comment)),
-            userId);
+            userId
+        );
 
         _taskRepositoryMock
-            .Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(), It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.ExistsAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(true);
 
         _taskHistoryRepositoryMock
@@ -71,18 +74,19 @@ public class CreateTaskCommentHandlerTests
 
         // Assert
         Assert.Equal(Unit.Value, result);
-        
+
         _taskHistoryRepositoryMock.Verify(
-            repo => repo.AddAsync(
-                It.Is<TaskHistory>(h => 
-                    h.TaskId == taskId && 
-                    h.Event == nameof(AddTaskCommentDomainEvent)),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-        
-        _unitOfWorkMock.Verify(
-            uow => uow.CommitAsync(It.IsAny<CancellationToken>()),
-            Times.Once);
+            repo =>
+                repo.AddAsync(
+                    It.Is<TaskHistory>(h =>
+                        h.TaskId == taskId && h.Event == nameof(AddTaskCommentDomainEvent)
+                    ),
+                    It.IsAny<CancellationToken>()
+                ),
+            Times.Once
+        );
+
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -93,11 +97,16 @@ public class CreateTaskCommentHandlerTests
         var command = new CreateTaskCommentCommand
         {
             TaskId = taskId,
-            Comment = "This is a test comment"
+            Comment = "This is a test comment",
         };
 
         _taskRepositoryMock
-            .Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(), It.IsAny<CancellationToken>()))
+            .Setup(repo =>
+                repo.ExistsAsync(
+                    It.IsAny<Expression<Func<TaskManagement.Domain.Entities.Task, bool>>>(),
+                    It.IsAny<CancellationToken>()
+                )
+            )
             .ReturnsAsync(false);
 
         // Act
@@ -105,17 +114,17 @@ public class CreateTaskCommentHandlerTests
 
         // Assert
         Assert.Equal(default, result);
-        
+
         _notificationHandlerMock.Verify(
-            handler => handler.AddNotification(It.IsAny<Notification>()), 
-            Times.Once);
-        
+            handler => handler.AddNotification(It.IsAny<Notification>()),
+            Times.Once
+        );
+
         _taskHistoryRepositoryMock.Verify(
             repo => repo.AddAsync(It.IsAny<TaskHistory>(), It.IsAny<CancellationToken>()),
-            Times.Never);
-        
-        _unitOfWorkMock.Verify(
-            uow => uow.CommitAsync(It.IsAny<CancellationToken>()),
-            Times.Never);
+            Times.Never
+        );
+
+        _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }

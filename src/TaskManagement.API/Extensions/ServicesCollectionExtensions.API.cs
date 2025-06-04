@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using TaskManagement.API.Configurations;
 using TaskManagement.API.Configurations.Authentication;
+using TaskManagement.Application;
 using TaskManagement.Domain;
 using TaskManagement.Infra;
 
@@ -16,8 +17,8 @@ public static class ServicesCollectionExtensionsApi
 {
     public static void AddApiDependencies(this IHostApplicationBuilder builder)
     {
-        var services = builder.Services
-            .AddEndpointsApiExplorer()
+        var services = builder
+            .Services.AddEndpointsApiExplorer()
             .AddSwaggerDependencies()
             .AddCorsDependencies()
             .AddJsonConfiguration()
@@ -27,8 +28,8 @@ public static class ServicesCollectionExtensionsApi
             .AddProblemDetails();
 
         services.AddHttpContextAccessor();
-
         services
+            .AddApplicationDependencies()
             .AddDomainDependencies()
             .AddInfraDependencies(builder.Configuration);
     }
@@ -36,26 +37,30 @@ public static class ServicesCollectionExtensionsApi
     public static void UseApiDependencies(this WebApplication app)
     {
         app.UseSwaggerDependencies()
-           .UseCors("AllowAll")
-           .UsePathBase("/task-management")
-           .UseForwardedHeaders()
-           .UseRouting()
-           .UseExceptionHandler()
-           .UseAuthentication()
-           .UseAuthorization();
+            .UseCors("AllowAll")
+            .UsePathBase("/task-management")
+            .UseForwardedHeaders()
+            .UseRouting()
+            .UseExceptionHandler()
+            .UseAuthentication()
+            .UseAuthorization();
 
         app.RegisterEndpoints();
     }
 
     private static IServiceCollection AddCorsDependencies(this IServiceCollection services)
     {
-        services
-            .AddCors(options => options
-            .AddPolicy("AllowAll", builder => builder
-                .SetIsOriginAllowed(_ => true)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()));
+        services.AddCors(options =>
+            options.AddPolicy(
+                "AllowAll",
+                builder =>
+                    builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+            )
+        );
 
         return services;
     }
@@ -70,7 +75,10 @@ public static class ServicesCollectionExtensionsApi
         return services;
     }
 
-    private static IServiceCollection AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddJwtConfiguration(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         services
             .AddAuthentication(authOptions =>
@@ -82,10 +90,12 @@ public static class ServicesCollectionExtensionsApi
             {
                 bearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)
+                    ),
                     ValidAudience = configuration["JWT:Issuer"],
                     ValidIssuer = configuration["JWT:Audience"],
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
 
                 bearerOptions.Events = new JwtBearerEvents
@@ -96,7 +106,7 @@ public static class ServicesCollectionExtensionsApi
                         context.Response.ContentType = "application/json; charset=utf-8";
                         var message = "An error occurred processing your authentication.";
                         return context.Response.WriteAsync(JsonSerializer.Serialize(message));
-                    }
+                    },
                 };
 
                 bearerOptions.SaveToken = true;
@@ -109,17 +119,23 @@ public static class ServicesCollectionExtensionsApi
     {
         services
             .AddAuthorizationBuilder()
-            .AddPolicy("ManagerPolicy", policy =>
-            {
-                policy.AddRequirements(
-                    new HasScopeRequirement("taskmanagement:manager"),
-                    new HasScopeRequirement("taskmanagement:user"));
-            })
-            .AddPolicy("UserPolicy", policy =>
-                policy.AddRequirements(new HasScopeRequirement("taskmanagement:user")));
+            .AddPolicy(
+                "ManagerPolicy",
+                policy =>
+                {
+                    policy.AddRequirements(
+                        new HasScopeRequirement("taskmanagement:manager"),
+                        new HasScopeRequirement("taskmanagement:user")
+                    );
+                }
+            )
+            .AddPolicy(
+                "UserPolicy",
+                policy => policy.AddRequirements(new HasScopeRequirement("taskmanagement:user"))
+            );
 
         services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
         return services;
-    }    
+    }
 }

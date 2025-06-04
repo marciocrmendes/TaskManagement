@@ -1,9 +1,9 @@
 using MediatR;
 using Moq;
+using TaskManagement.Application.Features.Tasks.Commands;
+using TaskManagement.Application.Features.Tasks.Handlers;
 using TaskManagement.CrossCutting.Notifications;
 using TaskManagement.CrossCutting.Persistences;
-using TaskManagement.Domain.Aggregates.Task.Commands;
-using TaskManagement.Domain.Aggregates.Task.Handlers;
 using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.UnitTests.Domain.Aggregates.Task.Handlers;
@@ -22,10 +22,11 @@ public class DeleteTaskHandlerTests
         _notificationHandlerMock = new Mock<INotificationHandler>();
 
         _taskRepositoryMock.Setup(repo => repo.UnitOfWork).Returns(_unitOfWorkMock.Object);
-        
+
         _handler = new DeleteTaskHandler(
             _taskRepositoryMock.Object,
-            _notificationHandlerMock.Object);
+            _notificationHandlerMock.Object
+        );
     }
 
     [Fact]
@@ -41,7 +42,8 @@ public class DeleteTaskHandlerTests
             "Task Description",
             DateTime.UtcNow.AddDays(1),
             TaskManagement.CrossCutting.Enums.TaskStatusEnum.Pending,
-            TaskManagement.CrossCutting.Enums.TaskPriorityEnum.Medium);
+            TaskManagement.CrossCutting.Enums.TaskPriorityEnum.Medium
+        );
 
         // Using reflection to set the task Id since it's a private setter
         typeof(TaskManagement.Domain.Entities.Task)
@@ -81,9 +83,14 @@ public class DeleteTaskHandlerTests
 
         // Assert
         Assert.Equal(default, result);
-        _notificationHandlerMock.Verify(handler => 
-            handler.AddNotification(It.IsAny<Notification>()), Times.Once);
-        _taskRepositoryMock.Verify(repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Task>()), Times.Never);
+        _notificationHandlerMock.Verify(
+            handler => handler.AddNotification(It.IsAny<Notification>()),
+            Times.Once
+        );
+        _taskRepositoryMock.Verify(
+            repo => repo.DeleteAsync(It.IsAny<TaskManagement.Domain.Entities.Task>()),
+            Times.Never
+        );
         _unitOfWorkMock.Verify(uow => uow.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }

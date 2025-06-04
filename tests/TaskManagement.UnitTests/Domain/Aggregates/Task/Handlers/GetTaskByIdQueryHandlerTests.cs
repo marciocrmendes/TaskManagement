@@ -1,7 +1,7 @@
 using Moq;
+using TaskManagement.Application.Features.Tasks.Handlers;
+using TaskManagement.Application.Features.Tasks.Queries;
 using TaskManagement.CrossCutting.Enums;
-using TaskManagement.Domain.Aggregates.Task.Handlers;
-using TaskManagement.Domain.Aggregates.Task.Queries;
 using TaskManagement.Domain.Interfaces;
 
 namespace TaskManagement.UnitTests.Domain.Aggregates.Task.Handlers;
@@ -31,7 +31,8 @@ public class GetTaskByIdQueryHandlerTests
             "Task Description",
             DateTime.UtcNow.AddDays(1),
             TaskStatusEnum.Pending,
-            TaskPriorityEnum.Medium);
+            TaskPriorityEnum.Medium
+        );
 
         // Using reflection to set the task Id since it's a private setter
         typeof(TaskManagement.Domain.Entities.Task)

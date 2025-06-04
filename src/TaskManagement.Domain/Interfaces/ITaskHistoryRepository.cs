@@ -2,7 +2,5 @@
 
 namespace TaskManagement.Domain.Interfaces
 {
-    public interface ITaskHistoryRepository : IRepository<TaskHistory>
-    {
-    }
+    public interface ITaskHistoryRepository : IRepository<TaskHistory> { }
 }

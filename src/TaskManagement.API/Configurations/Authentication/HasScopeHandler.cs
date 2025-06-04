@@ -6,7 +6,8 @@ namespace TaskManagement.API.Configurations.Authentication
     {
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            HasScopeRequirement requirement)
+            HasScopeRequirement requirement
+        )
         {
             var scopeClaim = context.User.FindFirst("scope");
             if (scopeClaim == null)

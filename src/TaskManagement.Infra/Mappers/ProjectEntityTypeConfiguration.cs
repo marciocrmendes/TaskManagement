@@ -11,19 +11,13 @@ namespace TaskManagement.Infra.Mappers
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id);
 
-            builder.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
 
-            builder.Property(e => e.Description)
-                .HasMaxLength(3000);
+            builder.Property(e => e.Description).HasMaxLength(3000);
 
-            builder.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("now()");
+            builder.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
 
-            builder.HasMany(p => p.Tasks)
-                .WithOne(t => t.Project)
-                .HasForeignKey(t => t.ProjectId);
+            builder.HasMany(p => p.Tasks).WithOne(t => t.Project).HasForeignKey(t => t.ProjectId);
         }
     }
 }

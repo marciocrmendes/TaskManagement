@@ -10,10 +10,7 @@
 
         public Task Task { get; set; } = null!;
 
-        public TaskHistory(Guid taskId,
-            string @event,
-            string data,
-            Guid modifiedBy)
+        public TaskHistory(Guid taskId, string @event, string data, Guid modifiedBy)
         {
             TaskId = taskId;
             Event = @event;

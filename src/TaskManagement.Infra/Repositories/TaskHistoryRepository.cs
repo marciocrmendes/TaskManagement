@@ -4,8 +4,7 @@ using TaskManagement.Infra.Context;
 
 namespace TaskManagement.Infra.Repositories
 {
-    public sealed class TaskHistoryRepository(TaskManagementDbContext dbContext) : Repository<TaskHistory>(dbContext),
-        ITaskHistoryRepository
-    {
-    }
+    public sealed class TaskHistoryRepository(TaskManagementDbContext dbContext)
+        : Repository<TaskHistory>(dbContext),
+            ITaskHistoryRepository { }
 }
